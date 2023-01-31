@@ -1,0 +1,158 @@
+﻿<div class="p-4">
+    <div class="container">
+        <h1>Hi {{user?.firstName}}!</h1>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Create Transaction</h3>
+                <div class="outerDiv">
+                    <form #form="ngForm">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label>Receivers Name</label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="FirstName" required #fname="ngModel"
+                                    [(ngModel)]="PayeeObj.FirstName" class="form-control" />
+                                <div *ngIf="fname.invalid && (fname.dirty || fname.touched)">
+                                    <span class="text-danger font-weight-bold" *ngIf="fname.errors?.['required']">
+                                        Required</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" required name="LastName" #lname="ngModel"
+                                    [(ngModel)]="PayeeObj.LastName" class="form-control" />
+                                <div *ngIf="lname.invalid && (lname.dirty || lname.touched)">
+                                    <span class="text-danger" *ngIf="lname.errors?.['required']"> Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label>Amount Details</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="number" placeholder="Amount" name="Amount" #Amount="ngModel" required
+                                    [(ngModel)]="PayeeObj.Amount" class="form-control" />
+                                <div *ngIf="Amount.touched">
+                                    <span class="text-danger" *ngIf="Amount.errors?.['required']"> Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label>Account Number</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="number" placeholder="Account Number" name="Account Number"
+                                    #AccountNumber="ngModel" required [(ngModel)]="PayeeObj.AccountNumber"
+                                    class="form-control" />
+                                <div *ngIf="AccountNumber.touched">
+                                    <span class="text-danger" *ngIf="AccountNumber.errors?.['required']">
+                                        Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label>Transfer Type</label>
+                            </div>
+                            <div class="col-md-7">
+                                <select required name="Amount Type" #AmountType="ngModel"
+                                    [(ngModel)]="PayeeObj.AmountType" class="form-control">
+                                    <option selected value="">Select Transfer Type</option>
+                                    <option>IMPS</option>
+                                    <option>NEFT</option>
+                                    <option>RTGS</option>
+                                </select>
+                                <div *ngIf="AmountType.touched">
+                                    <span class="text-danger" *ngIf="AmountType.errors?.['required']"> Required</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label>Remark</label>
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" name="Remark" placeholder="Remark" #Remark="ngModel" required
+                                    [(ngModel)]="PayeeObj.Remark" class="form-control" />
+                                <div *ngIf="Remark.touched">
+                                    <span class="text-danger" *ngIf="Remark.errors?.['required']"> Required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                            </div>
+                            <div class="col-md-8 text-end">
+                                <button class="btn btn-secondary btn-sm mx-2"
+                                    style="padding-left: 20px;padding-right: 20px;" (click)="onCancel()">
+                                    Cancel</button>
+                                <button class="btn btn-secondary btn-sm "
+                                    style="padding-left: 25px;padding-right: 25px;" [disabled]="form.invalid"
+                                    (click)="onSave()"> Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <h3>Transactions List</h3>
+                <div class="outerDiv">
+                    <div class="row">
+                        <div class="col-md-9">
+
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" placeholder="Search By Name" [(ngModel)]="searchText"
+                                (ngModelChange)="onSearch()" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Sr</th>
+                                        <th>Name</th>
+                                        <th>Amount</th>
+                                        <th>Account Number</th>
+                                        <th>Acc Type</th>
+                                        <th>Remark</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngIf="PayeeArr.length != 0">
+                                        <tr *ngFor="let item of PayeeArr;let sr = index">
+                                            <td>{{sr+1}}</td>
+                                            <td>{{item.FirstName}} {{item.LastName}}</td>
+                                            <td>{{item.Amount}}</td>
+                                            <td>{{item.AccountNumber}}</td>
+                                            <td>{{item.AmountType}}</td>
+                                            <td>{{item.Remark}}</td>
+                                            <td class="text-center">
+                                                <i class="fa fa-pencil-square" (click)="onEdit(item)"
+                                                    aria-hidden="true"></i>
+                                                <i class="fa fa-trash mx-2" (click)="onDelete(item)"
+                                                    aria-hidden="true"></i>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    <ng-container *ngIf="PayeeArr.length == 0">
+                                        <tr>
+                                            <td colspan="8" class="text-center"> No Record Present</td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
